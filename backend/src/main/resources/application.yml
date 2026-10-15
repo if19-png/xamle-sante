@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: xamle-sante
+  datasource:
+    url: jdbc:postgresql://localhost:5432/xamle_sante
+    username: postgres
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+server:
+  port: 8080
