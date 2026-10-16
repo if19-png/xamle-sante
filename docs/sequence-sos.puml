@@ -1,0 +1,19 @@
+@startuml
+actor Citoyen
+participant "Application React" as App
+participant "API Spring Boot" as API
+database PostgreSQL
+participant "Service SMS (Twilio / simulation)" as SMS
+
+Citoyen -> App : appuie sur SOS
+App -> App : navigator.geolocation (timeout 3 s)
+App -> API : POST /api/public/sos {lat, lon, téléphone}
+API -> PostgreSQL : INSERT sos_log
+API -> PostgreSQL : urgences les plus proches (ST_Distance)
+PostgreSQL --> API : 3 services d'urgence
+API -> SMS : envoyer(position + urgences)
+SMS --> API : résultat
+API -> PostgreSQL : UPDATE sos_log (sms_envoye)
+API --> App : message, urgences, statut SMS
+App --> Citoyen : confirmation + liste des urgences
+@enduml

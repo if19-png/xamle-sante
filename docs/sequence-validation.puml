@@ -1,0 +1,20 @@
+@startuml
+actor Professionnel
+actor Admin
+participant "API" as API
+database PostgreSQL
+
+Professionnel -> API : PUT /api/pro/mon-profil
+API -> PostgreSQL : statut = BROUILLON
+Professionnel -> API : POST /api/pro/mon-profil/soumettre
+API -> PostgreSQL : statut = EN_ATTENTE
+Admin -> API : GET /api/admin/professionnels/en-attente
+alt validé
+  Admin -> API : POST .../{id}/valider
+  API -> PostgreSQL : statut = VALIDE (public)
+else rejeté
+  Admin -> API : POST .../{id}/rejeter {motif}
+  API -> PostgreSQL : statut = REJETE + motif
+end
+API -> PostgreSQL : INSERT notification (professionnel)
+@enduml

@@ -2,8 +2,8 @@ spring:
   application:
     name: xamle-sante
   datasource:
-    url: jdbc:postgresql://localhost:5432/xamle_sante
-    username: postgres
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:xamle_sante}
+    username: ${DB_USER:postgres}
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
@@ -12,8 +12,22 @@ spring:
   flyway:
     enabled: true
 server:
-  port: 8080
+  port: ${PORT:8080}
+  error:
+    include-message: always
 app:
+  seed-demo: ${SEED_DEMO:true}
+  cors:
+    origins: ${CORS_ORIGINS:http://localhost:5173}
   jwt:
     secret: ${JWT_SECRET}
     expiration-minutes: 60
+  epidemio:
+    seuil-anonymat: 3
+    seuil-risque: 5
+  sms:
+    mode: ${SMS_MODE:simulation}
+    twilio:
+      account-sid: ${TWILIO_ACCOUNT_SID:}
+      auth-token: ${TWILIO_AUTH_TOKEN:}
+      from: ${TWILIO_FROM:}

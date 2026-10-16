@@ -1,0 +1,47 @@
+@startuml
+left to right direction
+actor "Citoyen / Patient" as P
+actor "Professionnel de santé" as PRO
+actor "Modérateur médical" as M
+actor "Admin santé publique" as A
+actor "Visiteur" as V
+P --|> V
+
+rectangle "Xamlé Santé" {
+  usecase "Rechercher un spécialiste (distance, langue, spécialité)" as UC1
+  usecase "Voir les établissements sur la carte" as UC2
+  usecase "Déclencher le SOS (position + SMS)" as UC3
+  usecase "Signaler des symptômes (anonyme)" as UC4
+  usecase "Consulter la carte de chaleur et les alertes" as UC5
+  usecase "Consulter l'agenda des campagnes" as UC6
+  usecase "S'inscrire / se connecter (JWT)" as UC7
+  usecase "S'abonner à une campagne (rappel SMS 24 h)" as UC8
+  usecase "Prendre un rendez-vous" as UC9
+  usecase "Payer les frais de dossier (Wave simulé)" as UC10
+  usecase "Gérer son profil et le soumettre" as UC11
+  usecase "Confirmer un rendez-vous" as UC12
+  usecase "Modérer les signalements" as UC13
+  usecase "Valider / rejeter un profil" as UC14
+  usecase "Publier alertes et campagnes" as UC15
+  usecase "Tableau de bord + export CSV" as UC16
+  usecase "Créer des comptes modérateur / admin" as UC17
+}
+V --> UC1
+V --> UC2
+V --> UC3
+V --> UC4
+V --> UC5
+V --> UC6
+V --> UC7
+P --> UC8
+P --> UC9
+UC9 ..> UC10 : <<include>> si vidéo
+PRO --> UC11
+PRO --> UC12
+M --> UC13
+A --> UC13
+A --> UC14
+A --> UC15
+A --> UC16
+A --> UC17
+@enduml

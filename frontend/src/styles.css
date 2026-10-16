@@ -1,0 +1,30 @@
+:root { --vert: #0b7a5b; --rouge: #c62828; --gris: #f3f5f4; --texte: #1d2b27; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: var(--texte); background: var(--gris); }
+.entete { background: var(--vert); color: #fff; padding: .5rem .75rem; position: sticky; top: 0; z-index: 1000; }
+.logo { display: block; font-size: 1.1rem; margin-bottom: .25rem; }
+nav { display: flex; flex-wrap: wrap; gap: .25rem .75rem; align-items: center; }
+nav a, .lien { color: #fff; text-decoration: none; font-size: .9rem; padding: .2rem 0; background: none; border: 0; cursor: pointer; }
+nav a.active { border-bottom: 2px solid #fff; }
+.lien-sos { background: var(--rouge); padding: .2rem .6rem !important; border-radius: 4px; font-weight: 700; }
+.page { max-width: 960px; margin: 0 auto; padding: .75rem; }
+.carte { background: #fff; border-radius: 8px; padding: .9rem; margin-bottom: .75rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+h1 { font-size: 1.3rem; margin: .2rem 0 .6rem; } h2 { font-size: 1.1rem; margin: .2rem 0 .5rem; }
+label { display: block; font-size: .85rem; margin: .5rem 0 .15rem; font-weight: 600; }
+input, select, textarea, button { font: inherit; }
+input, select, textarea { width: 100%; padding: .5rem; border: 1px solid #b9c4c0; border-radius: 6px; background: #fff; }
+input[type=checkbox] { width: auto; }
+button, .bouton { background: var(--vert); color: #fff; border: 0; padding: .55rem .9rem; border-radius: 6px; cursor: pointer; margin-top: .6rem; margin-right: .4rem; }
+button.sec { background: #5f6f69; } button.danger { background: var(--rouge); } button:disabled { opacity: .5; }
+.grille { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.carte-map { height: 320px; border-radius: 8px; margin-bottom: .75rem; }
+.badge { display: inline-block; padding: .1rem .5rem; border-radius: 10px; font-size: .75rem; background: #dfe7e4; }
+.badge.VALIDE, .badge.PAYE, .badge.CONFIRME, .badge.ENVOYE { background: #c8e6c9; }
+.badge.EN_ATTENTE, .badge.DEMANDE, .badge.BROUILLON { background: #fff3cd; }
+.badge.REJETE, .badge.ECHEC, .badge.ECHOUE { background: #ffcdd2; }
+.ok { color: #1b5e20; } .err { color: var(--rouge); }
+.sos-bouton { display: block; width: 100%; font-size: 1.6rem; padding: 1.4rem; background: var(--rouge); border-radius: 12px; font-weight: 800; letter-spacing: .05em; }
+.onglets { display: flex; flex-wrap: wrap; gap: .3rem; margin-bottom: .6rem; }
+.onglets button { background: #5f6f69; margin: 0; } .onglets button.actif { background: var(--vert); }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; } td, th { text-align: left; padding: .35rem; border-bottom: 1px solid #e3e8e6; }
+.defile { overflow-x: auto; }

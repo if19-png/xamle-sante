@@ -1,0 +1,41 @@
+@startuml
+enum Role { ADMIN PROFESSIONNEL PATIENT MODERATEUR }
+enum StatutValidation { BROUILLON EN_ATTENTE VALIDE REJETE }
+
+class Utilisateur { id; email; motDePasse; nom; prenom; telephone; role; actif }
+class Professionnel { id; bio; photoUrl; position: Point; statutValidation; motifRejet; consultationVideo }
+class Specialite { id; nom }
+class Langue { id; nom }
+class Etablissement { id; nom; type; adresse; services; ouvert24h; position: Point }
+class Horaire { jourSemaine; heureDebut; heureFin }
+class Avis { note; commentaire }
+class RendezVous { id; dateHeure; type; statut; lienVideo; motif }
+class Paiement { id; montant; statut; referenceWave }
+class ServiceUrgence { type; disponible24h }
+class SosLog { position: Point; telephoneDest; smsEnvoye }
+class Quartier { id; nom; zone: MultiPolygon }
+class Signalement { id; symptome; description; statut }
+class Alerte { niveau; titre; message; expireLe }
+class Campagne { type; titre; lieu; position: Point; dateDebut; dateFin }
+class RappelSms { envoiPrevuLe; statut }
+class Notification { titre; contenu; lue }
+
+Utilisateur --> Role
+Utilisateur "1" -- "0..1" Professionnel
+Professionnel --> StatutValidation
+Professionnel "N" -- "1" Specialite
+Professionnel "N" -- "0..1" Etablissement
+Professionnel "N" -- "N" Langue
+Professionnel "1" -- "N" Horaire
+Professionnel "1" -- "N" Avis
+Utilisateur "1" -- "N" RendezVous : patient
+Professionnel "1" -- "N" RendezVous
+RendezVous "1" -- "0..1" Paiement
+Etablissement "1" -- "N" ServiceUrgence
+Quartier "1" -- "N" Signalement
+Quartier "1" -- "N" Alerte
+note right of Signalement : AUCUN lien vers Utilisateur\n(anonymat garanti)
+Campagne "1" -- "N" RappelSms
+Utilisateur "1" -- "N" RappelSms
+Utilisateur "1" -- "N" Notification
+@enduml
