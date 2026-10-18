@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Circle, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import api, { CENTRE, msgErreur } from '../api';
 import { useAuth } from '../auth';
+import { Avatar, AvisBloc, Etoiles, Horaires } from '../Fiche';
 
 function Recentrer({ pos }) {
   const map = useMap();
@@ -17,6 +18,8 @@ export default function Recherche() {
   const [langues, setLangues] = useState([]);
   const [f, setF] = useState({ specialiteId: '', langueId: '', q: '', rayonKm: '', disponible: false });
   const [res, setRes] = useState([]);
+  const [comp, setComp] = useState({});
+  const [ouverts, setOuverts] = useState({});
   const [msg, setMsg] = useState('');
   const [rdv, setRdv] = useState(null);
   const [rdvForm, setRdvForm] = useState({ dateHeure: '', type: 'PRESENTIEL', motif: '' });
@@ -26,6 +29,12 @@ export default function Recherche() {
     api.get('/api/public/langues').then((r) => setLangues(r.data)).catch(() => {});
   }, []);
 
+  const chargerComp = (liste) => {
+    if (!liste.length) return setComp({});
+    api.get('/api/public/professionnels/complements', { params: { ids: liste.map((x) => x.id).join(',') } })
+      .then((c) => setComp(c.data)).catch(() => {});
+  };
+
   const chercher = () => {
     const params = { lat: pos.lat, lon: pos.lon };
     if (f.specialiteId) params.specialiteId = f.specialiteId;
@@ -34,7 +43,11 @@ export default function Recherche() {
     if (f.rayonKm) params.rayonM = Number(f.rayonKm) * 1000;
     if (f.disponible) params.disponible = true;
     api.get('/api/public/professionnels', { params })
-      .then((r) => { setRes(r.data); setMsg(r.data.length ? '' : 'Aucun spécialiste trouvé avec ces critères.'); })
+      .then((r) => {
+        setRes(r.data);
+        setMsg(r.data.length ? '' : 'Aucun spécialiste trouvé avec ces critères.');
+        chargerComp(r.data);
+      })
       .catch((e) => setMsg(msgErreur(e)));
   };
   useEffect(() => { chercher(); }, [pos]); // eslint-disable-line
@@ -100,14 +113,25 @@ export default function Recherche() {
       </MapContainer>
 
       {res.map((r) => (
-        <div className="carte" key={r.id}>
-          <h2>Dr {r.prenom} {r.nom} <span className="badge">{r.specialite}</span></h2>
+        <div className="carte fiche" key={r.id}>
+          <div className="fiche-tete">
+            <Avatar prenom={r.prenom} nom={r.nom} url={r.photoUrl} />
+            <div>
+              <h2>Dr {r.prenom} {r.nom} <span className="badge">{r.specialite}</span></h2>
+              <Etoiles moyenne={comp[r.id]?.moyenne} total={comp[r.id]?.total} />
+            </div>
+          </div>
           <p>{r.etablissement || 'Établissement non précisé'}
             {r.distanceM != null && <> — <b>{(r.distanceM / 1000).toFixed(1)} km</b></>}</p>
           {r.langues && <p>Langues : {r.langues}</p>}
           {r.telephone && <p>Tél : {r.telephone}</p>}
           {r.bio && <p>{r.bio}</p>}
           {r.consultationVideo && <span className="badge">Consultation vidéo</span>}
+          <details className="repli"><summary>Horaires</summary><Horaires horaires={comp[r.id]?.horaires} /></details>
+          <details className="repli" onToggle={(e) => setOuverts({ ...ouverts, [r.id]: e.target.open })}>
+            <summary>Avis des patients</summary>
+            {ouverts[r.id] && <AvisBloc proId={r.id} onChange={() => chargerComp(res)} />}
+          </details>
           {user?.role === 'PATIENT' && <div><button onClick={() => setRdv(r)}>Prendre rendez-vous</button></div>}
         </div>
       ))}

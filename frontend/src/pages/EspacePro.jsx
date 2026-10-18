@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import api, { CENTRE, msgErreur } from '../api';
+import { Avatar, EditeurHoraires } from '../Fiche';
 
-const VIDE = { specialiteId: '', etablissementId: '', bio: '', telephonePro: '', latitude: '', longitude: '', langueIds: [], consultationVideo: false };
+const VIDE = { specialiteId: '', etablissementId: '', bio: '', photoUrl: '', telephonePro: '', latitude: '', longitude: '', langueIds: [], consultationVideo: false };
 
 export default function EspacePro() {
   const [profil, setProfil] = useState(null);
@@ -16,7 +17,7 @@ export default function EspacePro() {
     api.get('/api/pro/mon-profil').then((r) => {
       setProfil(r.data);
       const langIds = (r.data.langues || '').split(', ').map((n) => langues.find((l) => l.nom === n)?.id).filter(Boolean);
-      setF({ specialiteId: r.data.specialiteId, etablissementId: r.data.etablissementId || '', bio: r.data.bio || '',
+      setF({ specialiteId: r.data.specialiteId, etablissementId: r.data.etablissementId || '', bio: r.data.bio || '', photoUrl: r.data.photoUrl || '',
         telephonePro: r.data.telephone || '', latitude: r.data.latitude ?? '', longitude: r.data.longitude ?? '',
         langueIds: langIds, consultationVideo: !!r.data.consultationVideo });
     }).catch(() => setProfil(null));
@@ -40,7 +41,7 @@ export default function EspacePro() {
     try {
       await api.put('/api/pro/mon-profil', {
         specialiteId: Number(f.specialiteId), etablissementId: f.etablissementId ? Number(f.etablissementId) : null,
-        bio: f.bio, telephonePro: f.telephonePro, latitude: f.latitude === '' ? null : Number(f.latitude),
+        bio: f.bio, photoUrl: f.photoUrl.trim() || null, telephonePro: f.telephonePro, latitude: f.latitude === '' ? null : Number(f.latitude),
         longitude: f.longitude === '' ? null : Number(f.longitude), langueIds: f.langueIds, consultationVideo: f.consultationVideo,
       });
       setMsg('Profil enregistré (brouillon). Soumettez-le pour validation.');
@@ -74,6 +75,11 @@ export default function EspacePro() {
           <option value="">Aucun / cabinet privé</option>{etabs.map((e) => <option key={e.id} value={e.id}>{e.nom}</option>)}
         </select>
         <label>Présentation</label><textarea value={f.bio} onChange={maj('bio')} />
+        <label>Photo (lien vers une image, https://…)</label>
+        <div className="photo-saisie">
+          <Avatar prenom={profil?.prenom || '?'} nom={profil?.nom || ''} url={f.photoUrl} taille={64} />
+          <input placeholder="https://exemple.com/ma-photo.jpg" value={f.photoUrl} onChange={maj('photoUrl')} />
+        </div>
         <label>Téléphone professionnel</label><input value={f.telephonePro} onChange={maj('telephonePro')} />
         <div className="grille">
           <div><label>Latitude</label><input value={f.latitude} onChange={maj('latitude')} /></div>
@@ -91,6 +97,8 @@ export default function EspacePro() {
         {profil && ['BROUILLON', 'REJETE'].includes(profil.statutValidation) &&
           <button type="button" className="sec" onClick={soumettre}>Soumettre à la validation</button>}
       </form>
+
+      {profil && <EditeurHoraires />}
 
       <div className="carte">
         <h2>Mes rendez-vous</h2>

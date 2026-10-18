@@ -173,3 +173,32 @@ body { background-image:
 .flot-hero .flot { filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .28)); }
 @media (max-width: 760px) { .flot-hero { width: 100%; opacity: .22; } }
 @media (prefers-reduced-motion: reduce) { .flot { animation: none; } }
+
+.sos-statut.simule-bande { border-left-color: #f59e0b; }
+.simule-bande .sos-statut-icone { background: #f59e0b; }
+
+/* ---------- Fiche spécialiste : photo, avis, horaires ---------- */
+.fiche-tete { display: flex; align-items: center; gap: .9rem; margin-bottom: .4rem; }
+.fiche-tete h2 { margin: 0 0 .15rem; }
+.avatar { border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(7, 92, 69, .25); }
+.avatar-ini { display: inline-grid; place-items: center; font-weight: 700; color: #fff;
+  background: linear-gradient(135deg, var(--vert), var(--turquoise, #14b8a6)); }
+.etoiles { color: #f59e0b; letter-spacing: 1px; }
+.etoiles-vide { color: #d1d5db; }
+.repli { margin: .5rem 0; border-top: 1px solid var(--bord, #e5e7eb); padding-top: .4rem; }
+.repli summary { cursor: pointer; font-weight: 600; color: var(--vert); }
+.horaires-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: .3rem .9rem; margin-top: .5rem; }
+.horaire-ligne { display: flex; justify-content: space-between; gap: .6rem; font-size: .92rem; }
+.avis-bloc { margin-top: .5rem; }
+.avis-ligne { padding: .4rem 0; border-bottom: 1px dashed var(--bord, #e5e7eb); }
+.avis-ligne p { margin: .2rem 0 0; }
+.avis-form { margin-top: .7rem; }
+.choix-note { display: flex; gap: .2rem; margin: .3rem 0; }
+.etoile-btn { background: none; border: none; color: #d1d5db; font-size: 1.8rem; line-height: 1; padding: 0 .1rem; cursor: pointer; }
+.etoile-btn.actif { color: #f59e0b; }
+.photo-saisie { display: flex; align-items: center; gap: .8rem; }
+.photo-saisie input { flex: 1; }
+.horaire-edit { display: flex; align-items: center; gap: .6rem; margin: .3rem 0; flex-wrap: wrap; }
+.horaire-edit label { min-width: 110px; margin: 0; }
+.horaire-edit input[type=time] { width: auto; }
