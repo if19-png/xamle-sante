@@ -26,18 +26,25 @@ public class UrgenceService {
 
     public record SosResponse(boolean smsEnvoye, String message, String erreur, List<UrgenceDto> urgences) {}
 
+    /** Un seul résultat par établissement (les services d'urgence sont regroupés). */
+    /** Un établissement n'apparaît qu'une fois, avec la liste de ses services d'urgence. */
     public List<UrgenceDto> plusProches(double lat, double lon, int limite) {
+        int n = Math.max(1, Math.min(limite, 20));
         return jdbc.sql("""
                 SELECT e.id AS etablissement_id, e.nom, e.type, e.adresse,
-                       COALESCE(su.telephone, e.telephone) AS telephone, su.type AS service_type,
-                       su.disponible_24h, ST_Y(e.position::geometry) AS latitude,
+                       COALESCE(MAX(su.telephone), e.telephone) AS telephone,
+                       string_agg(su.type, ', ' ORDER BY su.type) AS service_type,
+                       bool_or(su.disponible_24h) AS disponible24h,
+                       ST_Y(e.position::geometry) AS latitude,
                        ST_X(e.position::geometry) AS longitude,
-                       ST_Distance(e.position, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography) AS distance_m
+                       ST_Distance(e.position, ST_SetSRID(ST_MakePoint(CAST(:lon AS double precision),
+                           CAST(:lat AS double precision)), 4326)::geography) AS distance_m
                 FROM service_urgence su
                 JOIN etablissement e ON e.id = su.etablissement_id
+                GROUP BY e.id
                 ORDER BY distance_m
-                LIMIT :limite""")
-                .param("lat", lat).param("lon", lon).param("limite", limite)
+                LIMIT %d""".formatted(n))
+                .param("lat", lat).param("lon", lon)
                 .query(UrgenceDto.class).list();
     }
 

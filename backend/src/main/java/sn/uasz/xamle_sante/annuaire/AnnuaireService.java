@@ -65,7 +65,7 @@ public class AnnuaireService {
         boolean geo = lat != null && lon != null;
         Map<String, Object> p = new HashMap<>();
         StringBuilder sql = new StringBuilder("""
-                SELECT e.id, e.nom, e.type, e.adresse, e.telephone, e.services, e.ouvert_24h,
+                SELECT e.id, e.nom, e.type, e.adresse, e.telephone, e.services, e.ouvert_24h AS ouvert24h,
                        ST_Y(e.position::geometry) AS latitude, ST_X(e.position::geometry) AS longitude,
                 """);
         if (geo) {
@@ -196,7 +196,7 @@ public class AnnuaireService {
 
     public List<ProfessionnelDto> enAttente() {
         return jdbc.sql(PRO_SELECT.formatted(SANS_DISTANCE)
-                + "WHERE p.statut_validation = 'EN_ATTENTE' ORDER BY p.cree_le")
+                        + "WHERE p.statut_validation = 'EN_ATTENTE' ORDER BY p.cree_le")
                 .query(ProfessionnelDto.class).list();
     }
 
