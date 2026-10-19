@@ -288,7 +288,13 @@ class ApiScenariosTest {
         assertEquals(200, get("/api/public/langues").statusCode());
         assertEquals(200, get("/api/public/quartiers").statusCode());
         assertEquals(200, get("/api/public/etablissements?lat=12.5681&lon=-16.2719&type=HOPITAL").statusCode());
-        assertEquals(200, get("/api/public/etablissements").statusCode());
+        HttpResponse<String> etabs = get("/api/public/etablissements?lat=12.5681&lon=-16.2719");
+        assertEquals(200, etabs.statusCode());
+        assertTrue(etabs.body().contains("\"horaires\":\"Ouvert 24h/24"), "horaires affichés pour les établissements");
+        assertFalse(etabs.body().contains("\"telephone\":null"), "chaque établissement a un numéro de démonstration");
+        HttpResponse<String> pharmacies = get("/api/public/etablissements?type=PHARMACIE");
+        assertTrue(pharmacies.body().contains("PHARMACIE"));
+        assertFalse(pharmacies.body().contains("HOPITAL"));
         String id = idSpecialiste(false);
         assertEquals(200, get("/api/public/professionnels/" + id).statusCode());
         assertEquals(404, get("/api/public/professionnels/999999").statusCode());

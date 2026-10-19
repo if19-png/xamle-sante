@@ -4,6 +4,7 @@ import { Cross } from './icons';
 import Flottants from './Flottants';
 import Accueil from './pages/Accueil';
 import Recherche from './pages/Recherche';
+import Etablissements from './pages/Etablissements';
 import Sos from './pages/Sos';
 import Epidemio from './pages/Epidemio';
 import Campagnes from './pages/Campagnes';
@@ -35,6 +36,7 @@ export default function App() {
           <nav>
             <NavLink to="/" end>Accueil</NavLink>
             <NavLink to="/annuaire">Annuaire</NavLink>
+            <NavLink to="/etablissements">Établissements</NavLink>
             <NavLink to="/epidemio">Alertes santé</NavLink>
             <NavLink to="/campagnes">Campagnes</NavLink>
             {user?.role === 'PATIENT' && <NavLink to="/patient">Mes RDV</NavLink>}
@@ -57,6 +59,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Accueil />} />
           <Route path="/annuaire" element={<Recherche />} />
+          <Route path="/etablissements" element={<Etablissements />} />
           <Route path="/sos" element={<Sos />} />
           <Route path="/epidemio" element={<Epidemio />} />
           <Route path="/campagnes" element={<Campagnes />} />

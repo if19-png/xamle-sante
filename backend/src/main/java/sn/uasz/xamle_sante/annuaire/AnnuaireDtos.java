@@ -15,8 +15,8 @@ public final class AnnuaireDtos {
     public record Quartier(Integer id, String nom, Double latitude, Double longitude) {}
 
     public record EtablissementDto(Long id, String nom, String type, String adresse, String telephone,
-                                   String services, Boolean ouvert24h, Double latitude, Double longitude,
-                                   Double distanceM) {}
+                                   String services, Boolean ouvert24h, String horaires,
+                                   Double latitude, Double longitude, Double distanceM) {}
 
     public record ProfessionnelDto(Long id, String nom, String prenom, String specialite, Integer specialiteId,
                                    Long etablissementId, String etablissement, String telephone, String bio,
