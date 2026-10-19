@@ -63,17 +63,20 @@ export default function Sos() {
       </div>
       {etat && (
         <>
-          <div className={'carte sos-statut ' + (etat.smsEnvoye ? 'ok-bande' : 'ko-bande')}>
-            <div className="sos-statut-icone">{etat.smsEnvoye ? '✓' : '!'}</div>
+          <div className={'carte sos-statut ' + (!etat.smsEnvoye ? 'ko-bande' : etat.simule ? 'simule-bande' : 'ok-bande')}>
+            <div className="sos-statut-icone">{!etat.smsEnvoye ? '!' : etat.simule ? 'i' : '✓'}</div>
             <div>
-              <b>{etat.smsEnvoye ? 'Alerte envoyée' : 'Alerte non envoyée'}</b>
+              <b>{!etat.smsEnvoye ? 'Alerte non envoyée' : etat.simule ? 'Alerte enregistrée (mode démonstration)' : 'Alerte envoyée'}</b>
+              {etat.smsEnvoye && etat.simule && (
+                <div className="doux">Aucun SMS réel n'a été envoyé : l'envoi est simulé tant que le service SMS n'est pas activé.</div>
+              )}
               <div className="doux">Traitée en {etat.ms} ms</div>
               {etat.erreur && <div className="err">{etat.erreur}</div>}
             </div>
           </div>
 
           <div className="carte">
-            <h2>Message transmis à votre proche</h2>
+            <h2>{etat.simule ? 'Message qui serait envoyé à votre proche' : 'Message transmis à votre proche'}</h2>
             <div className="bulle-sms">{etat.message}</div>
           </div>
 

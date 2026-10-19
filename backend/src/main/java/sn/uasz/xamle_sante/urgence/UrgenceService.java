@@ -24,7 +24,8 @@ public class UrgenceService {
     public record SosRequest(@NotNull Double latitude, @NotNull Double longitude,
                              @NotBlank String telephoneDestinataire) {}
 
-    public record SosResponse(boolean smsEnvoye, String message, String erreur, List<UrgenceDto> urgences) {}
+    public record SosResponse(boolean smsEnvoye, String message, String erreur, List<UrgenceDto> urgences,
+                              boolean simule) {}
 
     /** Un seul résultat par établissement (les services d'urgence sont regroupés). */
     /** Un établissement n'apparaît qu'une fois, avec la liste de ses services d'urgence. */
@@ -70,6 +71,6 @@ public class UrgenceService {
         SmsService.Resultat res = sms.envoyer(r.telephoneDestinataire(), message);
         jdbc.sql("UPDATE sos_log SET sms_envoye = :ok, erreur_sms = :err WHERE id = :id")
                 .param("ok", res.envoye()).param("err", res.erreur()).param("id", logId).update();
-        return new SosResponse(res.envoye(), message, res.erreur(), urgences);
+        return new SosResponse(res.envoye(), message, res.erreur(), urgences, sms.estSimule());
     }
 }

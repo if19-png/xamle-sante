@@ -32,7 +32,8 @@ public class CampagneService {
             SELECT c.id, c.type, c.titre, c.description, c.lieu,
                    ST_Y(c.position::geometry) AS latitude, ST_X(c.position::geometry) AS longitude,
                    c.date_debut, c.date_fin
-            FROM campagne c """;
+            FROM campagne c
+            """;
 
     public record CampagneRequest(
             @NotBlank @Pattern(regexp = "VACCINATION|DEPISTAGE|SENSIBILISATION") String type,

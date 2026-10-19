@@ -27,6 +27,11 @@ public class SmsService {
 
     public record Resultat(boolean envoye, String erreur) {}
 
+    /** Vrai tant que Twilio n'est pas activé : aucun SMS réel n'est alors envoyé. */
+    public boolean estSimule() {
+        return !"twilio".equalsIgnoreCase(mode);
+    }
+
     public Resultat envoyer(String telephone, String message) {
         String to = normaliser(telephone);
         if (to == null) {
